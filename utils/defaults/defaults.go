@@ -62,6 +62,12 @@ func GetCanaryIngressAnnotationPrefixOrDefault(rollout *v1alpha1.Rollout) string
 	if rollout.Spec.Strategy.Canary != nil && rollout.Spec.Strategy.Canary.TrafficRouting != nil && rollout.Spec.Strategy.Canary.TrafficRouting.Nginx != nil && rollout.Spec.Strategy.Canary.TrafficRouting.Nginx.AnnotationPrefix != "" {
 		return rollout.Spec.Strategy.Canary.TrafficRouting.Nginx.AnnotationPrefix
 	}
+	if rollout.Spec.Strategy.Canary != nil && rollout.Spec.Strategy.Canary.TrafficRouting != nil && rollout.Spec.Strategy.Canary.TrafficRouting.Traefik != nil && rollout.Spec.Strategy.Canary.TrafficRouting.Traefik.AnnotationPrefix != "" {
+		return rollout.Spec.Strategy.Canary.TrafficRouting.Traefik.AnnotationPrefix
+	}
+	if rollout.Spec.Strategy.Canary != nil && rollout.Spec.Strategy.Canary.TrafficRouting != nil && rollout.Spec.Strategy.Canary.TrafficRouting.Traefik != nil {
+		return "traefik.ingress.kubernetes.io"
+	}
 	return "nginx.ingress.kubernetes.io"
 }
 func GetStrategyType(rollout *v1alpha1.Rollout) string {

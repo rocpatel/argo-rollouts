@@ -215,6 +215,8 @@ type RolloutTrafficRouting struct {
 	ALB *ALBTrafficRouting `json:"alb,omitempty"`
 	// SMI holds TrafficSplit specific configuration to route traffic
 	SMI *SMITrafficRouting `json:"smi,omitempty"`
+	// Traefik holds Traefik Ingress specific coniguration to route traffic
+	Traefik *TraefikTrafficRouting `json:"traefik,omitempty"`
 }
 
 // SMITrafficRouting configuration for TrafficSplit Custom Resource to control traffic routing
@@ -234,6 +236,22 @@ type NginxTrafficRouting struct {
 	AnnotationPrefix string `json:"annotationPrefix,omitempty"`
 	// StableIngress refers to the name of an `Ingress` resource in the same namespace as the `Rollout`
 	StableIngress string `json:"stableIngress"`
+	// +optional
+	AdditionalIngressAnnotations map[string]string `json:"additionalIngressAnnotations,omitempty"`
+}
+
+// TraefikTrafficRouting configuration for Traefik ingress controller to control traffic routing
+type TraefikTrafficRouting struct {
+	// AnnotationPrefix has to match the configured annotation prefix on the nginx ingress controller
+	// +optional
+	AnnotationPrefix string `json:"annotationPrefix,omitempty"`
+	// ServicePort refers to the port that the Ingress action should route traffic to
+	ServicePort int32 `json:"servicePort"`
+	// Ingress refers to the name of an `Ingress` resource in the same namespace as the `Rollout`
+	Ingress string `json:"ingress"`
+	// RootService references the service in the ingress to the controller should add the action to
+	// +optional
+	RootService string `json:"rootService,omitempty"`
 	// +optional
 	AdditionalIngressAnnotations map[string]string `json:"additionalIngressAnnotations,omitempty"`
 }

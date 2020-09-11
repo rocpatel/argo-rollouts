@@ -18,6 +18,10 @@ const (
 	ALBIngressAnnotation = "alb.ingress.kubernetes.io"
 	// ALBActionPrefix the prefix to specific actions within an ALB ingress.
 	ALBActionPrefix = "/actions."
+	// TraefikIngressAnnotation is the prefix annotation that is used by the Traefik Ingress controller to configure Traefik
+	TraefikIngressAnnotation = "traefik.ingress.kubernetes.io"
+	// TraefikServiceWeightsPrefix is the prefix to configure service weights
+	TraefikServiceWeightsPrefix = "/service-weights"
 )
 
 // ALBAction describes an ALB action that configure the behavior of an ALB. This struct is marshaled into a string
@@ -145,4 +149,13 @@ func ALBActionAnnotationKey(r *v1alpha1.Rollout) string {
 		actionService = r.Spec.Strategy.Canary.TrafficRouting.ALB.RootService
 	}
 	return fmt.Sprintf("%s%s%s", prefix, ALBActionPrefix, actionService)
+}
+
+// TraefikServiceWeightsKey returns teh annotation key for the service weights
+func TraefikServiceWeightsKey(r *v1alpha1.Rollout) string {
+	prefix := TraefikIngressAnnotation
+	if r.Spec.Strategy.Canary.TrafficRouting.Traefik.AnnotationPrefix != "" {
+		prefix = r.Spec.Strategy.Canary.TrafficRouting.Traefik.AnnotationPrefix
+	}
+	return fmt.Sprintf("%s%s", prefix, TraefikServiceWeightsPrefix)
 }
